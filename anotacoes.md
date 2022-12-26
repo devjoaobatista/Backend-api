@@ -31,5 +31,9 @@ git status = diz em qual branch estamos
 
 #Preciso ler a documentação do insomnia
 
-npm run start:dev = roda o código que estou utilizando
+#O código "npm run start:dev" roda o código que estou utilizando
 
+#Para informar pro express que o código recebido pelo body
+#é json e que precisa ser tratado, deve ser adicionado o 
+#metodo "use" da seguinte forma:
+#[variável que recebeu o express].use(express.jon())
