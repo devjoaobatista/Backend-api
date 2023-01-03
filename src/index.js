@@ -1,67 +1,85 @@
 import express from 'express';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 app.use(express.json());
 
-const users = [
-  {
-    nome: 'Joao', mail: 'joao@js.com', fone: 9999999, endereco: 'rua 2',
-  },
-  {
-    nome: 'Pedro', mail: 'pedro@js.com', fone: 77777777, endereco: 'rua 1',
-  },
-];
+const users = [];
 
-// Esse get retorna todos os usuários.
-app.get('/server', (request, response) => {
-  const usersWithIndex = users.map((user, id) => {
-    const objectTransformed = { id, ...user };
-    return objectTransformed;
-  });
-  return response.send(usersWithIndex);
-});
+// Essa rota retorna todos os usuários.
+app.get('/server', (request, response) => response.send(users));
 
-// Esse get retorna apenas um usuário através do ID repassado.
+// Essa rota retorna apenas um usuário através do ID repassado.
 app.get('/server/:id', (request, response) => {
   const { id } = request.params;
+  const indiceOfUser = users.findIndex((user) => user.id === id);
 
-  if (id > users.length) {
-    return response.status(404).send('Esse ID não existe!');
+  if (indiceOfUser === -1) {
+    return response.status(404).send('Esse usuário não existe!');
   }
 
-  return response.send(users[id]);
+  return response.send(users[indiceOfUser]);
 });
 
-// Esse post cria um novo usuário
+// Essa rota cria um novo usuário.
 app.post('/server', (request, response) => {
-  const newUser = request.body;
+  const {
+    nome, email, fone, endereco,
+  } = request.body;
+
+  if (!nome || !email || !fone || !endereco) {
+    return response.status(400).send('nome, email, fone e endereço são necessários!');
+  }
+
+  const newUser = {
+    id: uuidv4(),
+    nome,
+    email,
+    fone,
+    endereco,
+  };
+
   users.push(newUser);
 
   return response.status(201).send('Usuário criado!');
 });
 
-// Esse put atualiza um usuário da ID repassada.
+// Essa rota atualiza um usuário da ID repassada.
 app.put('/server/:id', (request, response) => {
   const { id } = request.params;
-  const updateUser = request.body;
+  const {
+    nome, email, fone, endereco,
+  } = request.body;
+  const indiceOfUser = users.findIndex((user) => user.id === id);
 
-  if (id > users.length) {
-    return response.status(404).send('Esse ID não existe');
+  if (indiceOfUser === -1) {
+    return response.status(404).send('Esse ID não existe!');
   }
+  if (!nome || !email || !fone || !endereco) {
+    return response.status(400).send('nome, email, fone e endereço são necessários!');
+  }
+  const newDataOfUser = {
+    id,
+    nome,
+    email,
+    fone,
+    endereco,
+  };
 
-  users[id] = updateUser;
-  return response.send('Usuário atualizado!');
+  users[indiceOfUser] = newDataOfUser;
+  return response.send('usuario Atualizado!');
 });
 
-// Esse delete apaga o usuário da ID repassada.
+// Essa rota apaga o usuário da ID repassada.
 app.delete('/server/:id', (request, response) => {
   const { id } = request.params;
+  const indiceOfUser = users.findIndex((user) => user.id === id);
 
-  if (id > users.length) {
+  if (indiceOfUser === -1) {
     return response.status(404).send('Esse ID não existe!');
   }
 
-  users.splice(id, 1);
+  users.splice(indiceOfUser, 1);
   return response.send('Usuário deletado!');
 });
 

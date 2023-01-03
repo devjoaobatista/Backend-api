@@ -8,17 +8,21 @@
 
 #put
 
-## O que vou precisar usar:
+## O que vou precisar usar nesse projeto:
 
-#Express.json (é uma função, pesquisar sobre como usar)
+#Express.json (é uma função, pesquisar sobre como usar).
 
-#O usuário deve ter um ID, um nome, telefone e endereço. (O ID pode ser o indice do array)
+#O usuário deve ter um ID, um nome, telefone e endereço. (O ID pode ser o indice do array).
 
-#Adicionar itens no array
+#Adicionar itens no array.
 
 #No get tem que ter uma opção de retorna apenas um cadastro com o iD.
 
 #O usuário que sofrer atualização não pode ter o ID alterado.
+
+## Novos os passos acima foram concluídos, proxímos passos:
+
+#Integrar o prisma e o banco de dadospg.
 
 
 ## Passos para adicionar o Lint e o Prettier no projeto:
@@ -62,3 +66,13 @@
 * Para corrigir automaticamente os arquivos basta escrever o comando informado informado acima e adicionar --fix. Usando o comando do exemplo anterior o código ficaria npx eslint src/index.js --fix.
 
 Caso tenha outras dúvidas, entre o seguinte artigo pode ajudar: [https://matheusteixeirajs.medium.com/como-configurar-eslint-e-prettier-para-seus-projetos-em-react-nodejs-e-typescript-53a2c0b9f5d4]
+
+## metodos de pesquisa possíveis no javascript
+
+#Você precisa saber apenas se ele existe? Use .includes().
+
+#Você precisa obter o elemento em si? Use .find(), ou .filter() para vários itens.
+
+#Você precisa encontrar o índice do elemento? Use .indexOf() ou 
+
+#findIndex() para uma pesquisa mais complexa.
