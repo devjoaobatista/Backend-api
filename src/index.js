@@ -7,34 +7,32 @@ const app = express();
 
 app.use(express.json());
 
-// Essa rota retorna todos os usuários.
-app.get('/server', async (request, response) => {
-  const DataBankUsers = await prisma.user.findMany();
-  response.send(DataBankUsers);
+// Retorna todos os usuários.
+app.get('/server', async (req, res) => {
+  const users = await prisma.user.findMany();
+  res.send(users);
 });
 
-// Essa rota retorna apenas um usuário através do ID repassado.
-app.get('/server/:id', async (request, response) => {
-  const { id } = request.params;
+// Retorna um usuário pelo ID.
+app.get('/server/:id', async (req, res) => {
+  const { id } = req.params;
 
   try {
-    const getOneUser = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id },
     });
-    return response.send(getOneUser);
+    return res.send(user);
   } catch (erro) {
-    return response.status(404).send('Esse ID não existe');
+    return res.status(404).send('ID não encontrado');
   }
 });
 
-// Essa rota cria um novo usuário.
-app.post('/server', async (request, response) => {
-  const {
-    nome, mail, fone, endereco,
-  } = request.body;
+// Cria um novo usuário.
+app.post('/server', async (req, res) => {
+  const { nome, mail, fone, endereco } = req.body;
 
   if (!nome || !mail || !fone || !endereco) {
-    return response.status(400).send('nome, email, fone e endereço são necessários!');
+    return res.status(400).send('nome, email, fone e endereço são obrigatórios');
   }
 
   const create = await prisma.user.create({
@@ -46,48 +44,40 @@ app.post('/server', async (request, response) => {
       endereco,
     },
   });
-  console.log(create);
-  console.log('usuário Criado');
+  console.log('Usuário criado:', create);
 
-  return response.status(201).send('Usuário criado!');
+  return res.status(201).send('Usuário criado');
 });
 
-// Essa rota atualiza um usuário da ID repassada.
-app.put('/server/:id', async (request, response) => {
-  const { id } = request.params;
-  const {
-    nome, mail, fone, endereco,
-  } = request.body;
+// Atualiza um usuário pelo ID.
+app.put('/server/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nome, mail, fone, endereco } = req.body;
 
   try {
     const update = await prisma.user.update({
       where: { id },
-      data: {
-        nome,
-        mail,
-        fone,
-        endereco,
-      },
+      data: { nome, mail, fone, endereco },
     });
-    console.log(update);
-    return response.send('usuario Atualizado!');
+    console.log('Usuário atualizado:', update);
+    return res.send('Usuário atualizado');
   } catch (erro) {
-    return response.status(404).send('Esse ID não existe no banco de dados ou os dados estão incompletos!');
+    return res.status(404).send('ID não encontrado ou dados incompletos');
   }
 });
 
-// Essa rota apaga o usuário da ID repassada.
-app.delete('/server/:id', async (request, response) => {
-  const { id } = request.params;
+// Deleta um usuário pelo ID.
+app.delete('/server/:id', async (req, res) => {
+  const { id } = req.params;
 
   try {
     await prisma.user.delete({
       where: { id },
     });
-    return response.send('Usuário deletado');
+    return res.send('Usuário deletado');
   } catch (erro) {
-    return response.status(404).send('Esse ID não existe');
+    return res.status(404).send('ID não encontrado');
   }
 });
 
-app.listen(3000, () => console.log('Servidor rodando'));
+app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
